@@ -737,13 +737,7 @@ void NuPlayer::GenericSource::onPollBuffering() {
     int64_t cachedDurationUs = -1ll;
     ssize_t cachedDataRemaining = -1;
 
-    ALOGW_IF(mWVMExtractor != NULL && mCachedSource != NULL,
-            "WVMExtractor and NuCachedSource both present");
-
-    if (mWVMExtractor != NULL) {
-        cachedDurationUs =
-                mWVMExtractor->getCachedDurationUs(&finalStatus);
-    } else if (mCachedSource != NULL) {
+    if (mCachedSource != NULL) {
         cachedDataRemaining =
                 mCachedSource->approxDataRemaining(&finalStatus);
 
