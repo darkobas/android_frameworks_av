@@ -2101,6 +2101,10 @@ status_t MPEG4Extractor::parseChunk(off64_t *offset, int depth) {
             uint32_t type;
             const void *data;
             size_t size = 0;
+
+            if (!mLastTrack)
+                return ERROR_MALFORMED;
+
             if (!mLastTrack->meta->findData(
                     kKeyTextFormatData, &type, &data, &size)) {
                 size = 0;
