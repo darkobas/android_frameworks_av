@@ -158,6 +158,7 @@ AudioTrack::AudioTrack(
       mObserver(NULL)
 #else
       mPausedPosition(0)
+#endif
 {
 #ifdef QCOM_DIRECTTRACK
     mAttributes.content_type = AUDIO_CONTENT_TYPE_UNKNOWN;
@@ -198,6 +199,7 @@ AudioTrack::AudioTrack(
       mObserver(NULL)
 #else
       mPausedPosition(0)
+#endif
 {
 #ifdef QCOM_DIRECTTRACK
     mAttributes.content_type = AUDIO_CONTENT_TYPE_UNKNOWN;
