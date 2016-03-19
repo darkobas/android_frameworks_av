@@ -301,9 +301,6 @@ status_t AudioPolicyEffects::releaseOutputSessionEffects(audio_io_handle_t outpu
               audioSession);
     }
 
-    mAudioPolicyService->onOutputSessionEffectsUpdate(stream, (audio_session_t)audioSession,
-            AUDIO_OUTPUT_FLAG_NONE, 0, -1, false);
-
     return status;
 }
 
