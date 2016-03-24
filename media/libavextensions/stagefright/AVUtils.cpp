@@ -43,12 +43,10 @@
 #include <media/stagefright/Utils.h>
 #include <media/MediaProfiles.h>
 
-#if defined(QCOM_HARDWARE) || defined(FLAC_OFFLOAD_ENABLED)
 #include "QCMediaDefs.h"
 #include "QCMetaData.h"
 #ifdef FLAC_OFFLOAD_ENABLED
 #include "audio_defs.h"
-#endif
 #endif
 
 #include <binder/IPCThreadState.h>
@@ -74,7 +72,6 @@ struct MetaKeyEntry{
 };
 
 static const MetaKeyEntry MetaKeyTable[] {
-#ifdef QCOM_HARDWARE
    {kKeyAacCodecSpecificData , "aac-codec-specific-data", CSD},
    {kKeyDivXVersion          , "divx-version"           , INT32},  // int32_t
    {kKeyDivXDrm              , "divx-drm"               , DATA},  // void *
@@ -98,7 +95,6 @@ static const MetaKeyEntry MetaKeyTable[] {
    {kKeyUseArbitraryMode     , "use-arbitrary-mode"     , INT32},  //bool (int32_t)
    {kKeySmoothStreaming      , "smooth-streaming"       , INT32},  //bool (int32_t)
    {kKeyHFR                  , "hfr"                    , INT32},  // int32_t
-#endif
 #ifdef FLAC_OFFLOAD_ENABLED
    {kKeyMinBlkSize           , "min-block-size"         , INT32},
    {kKeyMaxBlkSize           , "max-block-size"         , INT32},
@@ -205,7 +201,6 @@ static const struct mime_conv_t mimeLookup[] = {
     { MEDIA_MIMETYPE_AUDIO_AAC,         AUDIO_FORMAT_AAC },
     { MEDIA_MIMETYPE_AUDIO_VORBIS,      AUDIO_FORMAT_VORBIS },
     { MEDIA_MIMETYPE_AUDIO_OPUS,        AUDIO_FORMAT_OPUS},
-#ifdef QCOM_HARDWARE
     { MEDIA_MIMETYPE_AUDIO_AC3,         AUDIO_FORMAT_AC3 },
     { MEDIA_MIMETYPE_AUDIO_AMR_WB_PLUS, AUDIO_FORMAT_AMR_WB_PLUS },
     { MEDIA_MIMETYPE_AUDIO_DTS,         AUDIO_FORMAT_DTS },
@@ -217,7 +212,6 @@ static const struct mime_conv_t mimeLookup[] = {
     { MEDIA_MIMETYPE_CONTAINER_QTIFLAC, AUDIO_FORMAT_FLAC },
 #ifdef DOLBY_UDC
     { MEDIA_MIMETYPE_AUDIO_EAC3_JOC,    AUDIO_FORMAT_E_AC3_JOC },
-#endif
 #endif
     { 0, AUDIO_FORMAT_INVALID }
 };
@@ -975,7 +969,6 @@ void AVUtils::setIntraPeriod(
     return;
 }
 
-#ifdef QCOM_HARDWARE
 void AVUtils::HFR::setHFRIfEnabled(
         const CameraParameters& params,
         sp<MetaData> &meta) {
@@ -1094,32 +1087,6 @@ int32_t AVUtils::HFR::getHFRCapabilities(
     return (maxHFRWidth > 0) && (maxHFRHeight > 0) &&
             (maxHFRFps > 0) && (maxBitRate > 0) ? 1 : -1;
 }
-#else
-void AVUtils::HFR::setHFRIfEnabled(
-        const CameraParameters& /*params*/,
-        sp<MetaData> & /*meta*/) {}
-
-status_t AVUtils::HFR::initializeHFR(
-        const sp<MetaData> & /*meta*/, sp<AMessage> & /*format*/,
-        int64_t & /*maxFileDurationUs*/, video_encoder /*videoEncoder*/) {
-    return OK;
-}
-
-void AVUtils::HFR::setHFRRatio(
-        sp<MetaData> & /*meta*/, const int32_t /*hfrRatio*/) {}
-
-int32_t AVUtils::HFR::getHFRRatio(
-        const sp<MetaData> & /*meta */) {
-    return 1;
-}
-
-int32_t AVUtils::HFR::getHFRCapabilities(
-        video_encoder /*codec*/,
-        int& /*maxHFRWidth*/, int& /*maxHFRHeight*/, int& /*maxHFRFps*/,
-        int& /*maxBitRate*/) {
-    return -1;
-}
-#endif
 
 void AVUtils::extractCustomCameraKeys(
         const CameraParameters& params, sp<MetaData> &meta) {
