@@ -4437,8 +4437,8 @@ status_t MPEG4Source::read(
                 if (dstOffset > SIZE_MAX - 4 ||
                         dstOffset + 4 > SIZE_MAX - nalLength ||
                         dstOffset + 4 + nalLength > mBuffer->size()) {
-                    ALOGE("b/26365349 : %zu %zu", dstOffset, mBuffer->size());
-                    android_errorWriteLog(0x534e4554, "26365349");
+                    ALOGE("b/27208621 : %zu %zu", dstOffset, mBuffer->size());
+                    android_errorWriteLog(0x534e4554, "27208621");
                     mBuffer->release();
                     mBuffer = NULL;
                     return ERROR_MALFORMED;
@@ -4759,7 +4759,15 @@ status_t MPEG4Source::fragmentedRead(
                     continue;
                 }
 
-                CHECK(dstOffset + 4 <= mBuffer->size());
+                if (dstOffset > SIZE_MAX - 4 ||
+                        dstOffset + 4 > SIZE_MAX - nalLength ||
+                        dstOffset + 4 + nalLength > mBuffer->size()) {
+                    ALOGE("b/26365349 : %zu %zu", dstOffset, mBuffer->size());
+                    android_errorWriteLog(0x534e4554, "26365349");
+                    mBuffer->release();
+                    mBuffer = NULL;
+                    return ERROR_MALFORMED;
+                }
 
                 dstData[dstOffset++] = 0;
                 dstData[dstOffset++] = 0;
